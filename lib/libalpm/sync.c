@@ -1091,7 +1091,7 @@ static int load_packages(alpm_handle_t *handle, alpm_list_t **data,
 {
 	size_t current = 0, current_bytes = 0;
 	int errors = 0;
-	alpm_list_t *i;
+	alpm_list_t *i, *delete = NULL;
 	alpm_event_t event;
 
 	/* load packages from disk now that they are known-valid */
@@ -1114,6 +1114,7 @@ static int load_packages(alpm_handle_t *handle, alpm_list_t **data,
 		filepath = _alpm_filecache_find(handle, spkg->filename);
 
 		if(!filepath) {
+			alpm_list_free(delete);
 			_alpm_log(handle, ALPM_LOG_ERROR,
 					_("%s: could not find package in cache\n"), spkg->name);
 			RET_ERR(handle, ALPM_ERR_PKG_NOT_FOUND, -1);
@@ -1156,6 +1157,7 @@ static int load_packages(alpm_handle_t *handle, alpm_list_t **data,
 		if(error != 0) {
 			errors++;
 			*data = alpm_list_add(*data, strdup(spkg->filename));
+			delete = alpm_list_add(delete, strdup(filepath));
 			free(filepath);
 			_alpm_pkg_free(pkgfile);
 			continue;
@@ -1180,6 +1182,11 @@ static int load_packages(alpm_handle_t *handle, alpm_list_t **data,
 	EVENT(handle, &event);
 
 	if(errors) {
+		for(i = delete; i; i = i->next) {
+			prompt_to_delete(handle, i->data, ALPM_ERR_PKG_INVALID);
+		}
+		alpm_list_free(delete);
+
 		if(handle->pm_errno == ALPM_ERR_OK) {
 			RET_ERR(handle, ALPM_ERR_PKG_INVALID, -1);
 		}
