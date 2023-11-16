@@ -1144,15 +1144,15 @@ static int load_packages(alpm_handle_t *handle, alpm_list_t **data,
 			}
 			if(spkg->isize != pkgfile->isize) {
 				_alpm_log(handle, ALPM_LOG_DEBUG,
-						"internal package install size  mismatch, expected: '%lld', actual: '%lld'\n",
+						"internal package install size mismatch, expected: '%lld', actual: '%lld'\n",
 						spkg->isize, pkgfile->isize);
 				error = 1;
 			}
-			error |= check_pkg_mismatch(handle, "depends",  spkg->depends,pkgfile->depends, (alpm_list_fn_cmp)dep_not_equal);
-			error |= check_pkg_mismatch(handle, "conflicts",  spkg->conflicts, pkgfile->conflicts, (alpm_list_fn_cmp)dep_not_equal);
-			error |= check_pkg_mismatch(handle, "replaces",  spkg->replaces, pkgfile->replaces, (alpm_list_fn_cmp)dep_not_equal);
-			error |= check_pkg_mismatch(handle, "provides",  spkg->replaces, pkgfile->replaces, (alpm_list_fn_cmp)dep_not_equal);
-			error |= check_pkg_mismatch(handle, "groups",  spkg->groups, pkgfile->groups, (alpm_list_fn_cmp)strcmp);
+			error |= check_pkg_mismatch(handle, "depends", spkg->depends,pkgfile->depends, (alpm_list_fn_cmp)dep_not_equal);
+			error |= check_pkg_mismatch(handle, "conflicts", spkg->conflicts, pkgfile->conflicts, (alpm_list_fn_cmp)dep_not_equal);
+			error |= check_pkg_mismatch(handle, "replaces", spkg->replaces, pkgfile->replaces, (alpm_list_fn_cmp)dep_not_equal);
+			error |= check_pkg_mismatch(handle, "provides", spkg->replaces, pkgfile->replaces, (alpm_list_fn_cmp)dep_not_equal);
+			error |= check_pkg_mismatch(handle, "groups", spkg->groups, pkgfile->groups, (alpm_list_fn_cmp)strcmp);
 		}
 		if(error != 0) {
 			errors++;
