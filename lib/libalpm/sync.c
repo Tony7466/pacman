@@ -1151,7 +1151,7 @@ static int load_packages(alpm_handle_t *handle, alpm_list_t **data,
 			error |= check_pkg_mismatch(handle, "depends", spkg->depends,pkgfile->depends, (alpm_list_fn_cmp)dep_not_equal);
 			error |= check_pkg_mismatch(handle, "conflicts", spkg->conflicts, pkgfile->conflicts, (alpm_list_fn_cmp)dep_not_equal);
 			error |= check_pkg_mismatch(handle, "replaces", spkg->replaces, pkgfile->replaces, (alpm_list_fn_cmp)dep_not_equal);
-			error |= check_pkg_mismatch(handle, "provides", spkg->replaces, pkgfile->replaces, (alpm_list_fn_cmp)dep_not_equal);
+			error |= check_pkg_mismatch(handle, "provides", spkg->provides, pkgfile->provides, (alpm_list_fn_cmp)dep_not_equal);
 			error |= check_pkg_mismatch(handle, "groups", spkg->groups, pkgfile->groups, (alpm_list_fn_cmp)strcmp);
 		}
 		if(error != 0) {
