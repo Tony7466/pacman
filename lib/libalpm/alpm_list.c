@@ -508,6 +508,31 @@ char SYMEXPORT *alpm_list_find_str(const alpm_list_t *haystack,
 			(alpm_list_fn_cmp)strcmp);
 }
 
+int SYMEXPORT alpm_list_equal(const alpm_list_t *left,
+		const alpm_list_t *right, alpm_list_fn_cmp fn)
+{
+	const alpm_list_t *l = left;
+	const alpm_list_t *r = right;
+
+	if((l == NULL) != (r == NULL)) {
+		return 0;
+	}
+
+	if(alpm_list_count(l) != alpm_list_count(r)) {
+		return 0;
+	}
+
+	while(l != NULL) {
+		if(fn(l->data, r->data) != 0) {
+			return 0;
+		}
+		l = l->next;
+		r = r->next;
+	}
+
+	return 1;
+}
+
 void SYMEXPORT alpm_list_diff_sorted(const alpm_list_t *left,
 		const alpm_list_t *right, alpm_list_fn_cmp fn,
 		alpm_list_t **onlyleft, alpm_list_t **onlyright)
