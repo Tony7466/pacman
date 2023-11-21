@@ -1144,7 +1144,7 @@ static int load_packages(alpm_handle_t *handle, alpm_list_t **data,
 			}
 			if(spkg->isize != pkgfile->isize) {
 				_alpm_log(handle, ALPM_LOG_DEBUG,
-						"internal package install size mismatch, expected: '%lld', actual: '%lld'\n",
+						"internal package install size mismatch, expected: '%ld', actual: '%ld'\n",
 						spkg->isize, pkgfile->isize);
 				error = 1;
 			}
