@@ -1078,11 +1078,12 @@ static int dep_not_equal(const alpm_depend_t *left, const alpm_depend_t *right)
 static int check_pkg_mismatch(alpm_handle_t *handle, const char *field,
 		alpm_list_t *left, alpm_list_t *right, alpm_list_fn_cmp cmp)
 {
-	if(!alpm_list_equal(left, right, cmp)) {
+	if(!alpm_list_equal_ignore_order(left, right, cmp)) {
 		_alpm_log(handle, ALPM_LOG_DEBUG,
 				"internal package %s mismatch\n", field);
 		return 1;
 	}
+
 	return 0;
 }
 
@@ -1148,7 +1149,7 @@ static int load_packages(alpm_handle_t *handle, alpm_list_t **data,
 						spkg->isize, pkgfile->isize);
 				error = 1;
 			}
-			error |= check_pkg_mismatch(handle, "depends", spkg->depends,pkgfile->depends, (alpm_list_fn_cmp)dep_not_equal);
+			error |= check_pkg_mismatch(handle, "depends", spkg->depends, pkgfile->depends, (alpm_list_fn_cmp)dep_not_equal);
 			error |= check_pkg_mismatch(handle, "conflicts", spkg->conflicts, pkgfile->conflicts, (alpm_list_fn_cmp)dep_not_equal);
 			error |= check_pkg_mismatch(handle, "replaces", spkg->replaces, pkgfile->replaces, (alpm_list_fn_cmp)dep_not_equal);
 			error |= check_pkg_mismatch(handle, "provides", spkg->provides, pkgfile->provides, (alpm_list_fn_cmp)dep_not_equal);

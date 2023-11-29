@@ -508,11 +508,12 @@ char SYMEXPORT *alpm_list_find_str(const alpm_list_t *haystack,
 			(alpm_list_fn_cmp)strcmp);
 }
 
-int SYMEXPORT alpm_list_equal(const alpm_list_t *left,
+int SYMEXPORT alpm_list_equal_ignore_order(const alpm_list_t *left,
 		const alpm_list_t *right, alpm_list_fn_cmp fn)
 {
 	const alpm_list_t *l = left;
 	const alpm_list_t *r = right;
+	int *matched;
 
 	if((l == NULL) != (r == NULL)) {
 		return 0;
@@ -522,14 +523,32 @@ int SYMEXPORT alpm_list_equal(const alpm_list_t *left,
 		return 0;
 	}
 
-	while(l != NULL) {
-		if(fn(l->data, r->data) != 0) {
+	matched = calloc(alpm_list_count(right), sizeof(int));
+
+	for(l = left; l; l = l->next) {
+		int found = 0;
+		int n = 0;
+
+		for(r = right; r; r = r->next, n++) {
+			/* make sure we don't match the same value twice */
+			if(matched[n]) {
+				continue;
+			}
+			if(fn(l->data, r->data) == 0) {
+				found = 1;
+				matched[n] = 1;
+				break;
+			}
+
+		}
+
+		if(!found) {
+			free(matched);
 			return 0;
 		}
-		l = l->next;
-		r = r->next;
 	}
 
+	free(matched);
 	return 1;
 }
 
